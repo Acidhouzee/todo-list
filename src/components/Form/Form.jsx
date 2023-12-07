@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { addNewTask } from '../../redux/tasksSlice';
+
 
 const Form = () => {
+  const dispatch = useDispatch();
+  //const tasks = useSelector(state => state.tasks);
   const [formValue, setFormValue] = useState('');
-  const [tasks, setTasks] = useState([]);
 
   const hendleAddTask = (evt) => {
     evt.preventDefault();
@@ -11,11 +15,7 @@ const Form = () => {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-
-    if (formValue.trim() !== '') {
-      setTasks([...tasks, formValue]);
-      setFormValue('');
-    }
+    dispatch(addNewTask(formValue));
   };
 
   return (
