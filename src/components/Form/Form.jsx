@@ -1,11 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addNewTask, clearTasks } from '../../redux/tasksSlice';
-import { nanoid } from 'nanoid'
+import { nanoid } from 'nanoid';
+import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { app } from '../../firebase/firebase';
+
+
 
 const Form = () => {
   const dispatch = useDispatch();
   const [formValue, setFormValue] = useState('');
+  const db = getFirestore(app);
+
+  useEffect(() => {
+    async function getDB() {
+      return getDocs(collection(db, "users"));
+    }
+    console.log(getDB());
+  }, [db])
 
   const handleAddTask = (evt) => {
     evt.preventDefault();

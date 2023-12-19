@@ -6,7 +6,6 @@ const TasksTable = () => {
 
   const dispatch = useDispatch();
   const tasks = useSelector(state => state.tasks);
-  // const activeTasks = tasks.filter
 
   const count = tasks.reduce(
     (acc, task) => {
