@@ -1,29 +1,31 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
+import {fetchTasks} from "./operation";
 
-const formDatailsSlice = createSlice({
+const initialState = {
+  items: [],
+  isLoading: false,
+  error: null
+}
+
+const formDetailsSlice = createSlice({
   name: 'tasks',
-  initialState: [],
-  reducers: {
-    addNewTask: (state, action) => {
-      return [...state, action.payload];
-    },
-    clearTasks: (state) => {
-      return [];
-    },
-    taskStatus: (state, action) => {
-      for (const task of state) {
-        if (task.id === action.payload) {
-          task.status = !task.status;
-          break;
-        }
-      }
-    },
-    deleteTask: (state, action) => {
-      const index = state.findIndex(task => task.id === action.payload);
-      state.splice(index, 1);
-    },
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTasks.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchTasks.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.items = action.payload;
+      })
+      .addCase(fetchTasks.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
   },
 });
 
-export const { addNewTask, clearTasks, taskStatus, deleteTask } = formDatailsSlice.actions;
-export const formDatailsReducer = formDatailsSlice.reducer;
+export const formDetailsReducer = formDetailsSlice.reducer;

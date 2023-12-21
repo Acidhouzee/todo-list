@@ -1,23 +1,13 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addNewTask, clearTasks } from '../../redux/tasksSlice';
-import { nanoid } from 'nanoid';
-import { collection, getDocs } from "firebase/firestore";
-import { db } from '../../firebase/firebase';
+// import { useDispatch } from 'react-redux';
+// import { addNewTask, clearTasks } from '../../redux/tasksSlice';
+// import { nanoid } from 'nanoid';
 
 
 
 const Form = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [formValue, setFormValue] = useState('');
-
-  const handleHUETA = async () => {
-    const querySnapshot = await getDocs(collection(db, "tasks"));
-    querySnapshot.forEach((doc) => {
-      console.log(doc.data());
-    });
-  }
-  console.log(handleHUETA());
 
   const handleAddTask = (evt) => {
     evt.preventDefault();
@@ -27,17 +17,17 @@ const Form = () => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    const newTask = {
-      id: nanoid(5),
-      task: formValue,
-      status: false
-    }
+    // const newTask = {
+    //   id: nanoid(5),
+    //   task: formValue,
+    //   status: false
+    // }
     setFormValue('');
-    dispatch(addNewTask(newTask));
+    // dispatch(addNewTask(newTask));
   };
 
   const handleClearTasks = () => {
-    dispatch(clearTasks());
+    // dispatch(clearTasks());
   };
 
   return (
