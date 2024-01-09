@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-// import { useDispatch } from 'react-redux';
-// import { addNewTask, clearTasks } from '../../redux/tasksSlice';
-// import { nanoid } from 'nanoid';
+import { useDispatch } from 'react-redux';
+import { addTask } from '../../redux/operation';
+import { nanoid } from 'nanoid';
 
 
 
 const Form = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [formValue, setFormValue] = useState('');
 
   const handleAddTask = (evt) => {
@@ -17,18 +17,18 @@ const Form = () => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    // const newTask = {
-    //   id: nanoid(5),
-    //   task: formValue,
-    //   status: false
-    // }
+    const newTask = {
+      id: nanoid(5),
+      task: formValue,
+      status: false
+    }
     setFormValue('');
-    // dispatch(addNewTask(newTask));
+    dispatch(addTask(newTask));
   };
 
-  const handleClearTasks = () => {
-    // dispatch(clearTasks());
-  };
+  // const handleClearTasks = () => {
+  //   dispatch(clearTasks());
+  // };
 
   return (
     <div>
@@ -43,7 +43,7 @@ const Form = () => {
 
         <button type='submit'>Add Task</button>
       </form>
-      <button onClick={handleClearTasks} type='submit'>Clean Tasks</button>
+      {/* <button onClick={handleClearTasks} type='submit'>Clean Tasks</button> */}
     </div>
   )
 }

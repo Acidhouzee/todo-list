@@ -1,31 +1,38 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {fetchTasks} from "./operation";
+import {addTask, fetchTasks} from "./operation";
 
-const initialState = {
-  items: [],
-  isLoading: false,
-  error: null
-}
+const handlePending = state => {
+  state.isLoading = true;
+};
+
+const handleRejected = (state, action) => {
+  state.isLoading = false;
+  state.error = action.payload;
+};
 
 const formDetailsSlice = createSlice({
   name: 'tasks',
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
+  initialState: {
+    items: [],
+    isLoading: false,
+    error: null
+  },
+  extraReducers: builder => {
     builder
-      .addCase(fetchTasks.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
+      .addCase(addTask.pending, handlePending)
+      .addCase(fetchTasks.pending, handlePending)
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.error = null;
         state.items = action.payload;
       })
-      .addCase(fetchTasks.rejected, (state, action) => {
+      .addCase(addTask.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
-      });
+        state.error = null;
+        state.items = [...state.items, action.payload];
+      })
+      .addCase(fetchTasks.rejected, handleRejected)
   },
 });
 
-export const formDetailsReducer = formDetailsSlice.reducer;
+export const tasksReducer = formDetailsSlice.reducer;
