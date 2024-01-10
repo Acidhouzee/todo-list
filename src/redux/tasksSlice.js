@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {addTask, fetchTasks} from "./operation";
+import {addTask, deleteTask, fetchTasks, toggleCompleted} from "./operation";
 
 const handlePending = state => {
   state.isLoading = true;
@@ -19,8 +19,16 @@ const formDetailsSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(addTask.pending, handlePending)
       .addCase(fetchTasks.pending, handlePending)
+      .addCase(addTask.pending, handlePending)
+      .addCase(deleteTask.pending, handlePending)
+      .addCase(toggleCompleted.pending, handlePending)
+
+      .addCase(fetchTasks.rejected, handleRejected)
+      .addCase(addTask.rejected, handleRejected)
+      .addCase(deleteTask.rejected, handleRejected)
+      .addCase(toggleCompleted.rejected, handleRejected)
+
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
@@ -31,7 +39,20 @@ const formDetailsSlice = createSlice({
         state.error = null;
         state.items = action.payload;
       })
-      .addCase(fetchTasks.rejected, handleRejected)
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.items = action.payload;
+      })
+      .addCase(toggleCompleted.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        const index = state.items.findIndex(
+          task => task.id === action.payload.id
+        );
+        state.items = action.payload;
+      })
+     
   },
 });
 

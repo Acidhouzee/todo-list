@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTasks } from "../../redux/selectors";
-import { fetchTasks } from '../../redux/operation';
+import { fetchTasks, toggleCompleted, deleteTask } from '../../redux/operation';
 
 const TasksTable = () => {
 
@@ -12,7 +12,9 @@ const TasksTable = () => {
     dispatch(fetchTasks());
   }, [dispatch]);
 
-  console.log(tasks);
+  const handleToggle = (task) => dispatch(toggleCompleted(task));
+
+  const handleTaskRemove = (task) => dispatch(deleteTask(task));
 
   const count = tasks.reduce(
     (acc, task) => {
@@ -26,31 +28,23 @@ const TasksTable = () => {
     { active: 0, completed: 0 },
   );
 
-  // const handleTaskStatus = (id) => {
-  //   dispatch(taskStatus(id));
-  // };
-
-  // const handleTaskRemove = (id) => {
-  //   dispatch(deleteTask(id));
-  // };
 
   return (
     <>
       Tasks
       Active: {count.active}
       Completed: {count.completed}
-      <ul>
-        { tasks.length > 0 &&
-        tasks.map(task =>
-          <li className={task.status ? 'task-end' : 'task-start'} key={task.id}>
-            {/* <input type='checkbox' onChange={() => { handleTaskStatus(task.id); }} checked={task.status ? 'checked' : ''} /> */}
-            <p>{task.task}</p>
-            {/* <button className='remove-task' onClick={() => { handleTaskRemove(task.id); }}>
-              Remove Task
-            </button> */}
-          </li>,
-        )}
-      </ul>
+        <ul>
+          { tasks.length > 0 && tasks.map(task => (
+            <li className={task.status ? 'task-end' : 'task-start'} key={task.id}>
+              <input type='checkbox' onChange={() => handleToggle(task) } checked={task.status ? 'checked' : ''} />
+              <p>{task.task}</p>
+              <button className='remove-task' onClick={() => { handleTaskRemove(task); }}>
+                Remove Task
+              </button>
+            </li>
+          ))}
+        </ul>
     </>
   );
 };

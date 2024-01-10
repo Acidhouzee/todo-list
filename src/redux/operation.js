@@ -1,4 +1,4 @@
-import {collection, getDocs, addDoc} from "firebase/firestore";
+import {collection, getDocs, addDoc, updateDoc, deleteDoc, orderBy, serverTimestamp, query, doc} from "firebase/firestore";
 import {db} from "../firebase/firebase";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 
@@ -6,7 +6,7 @@ export const fetchTasks = createAsyncThunk(
   'tasks/fetchAll',
   async (_, thunkAPI) => {
     try {
-      const res = await getDocs(collection(db, "tasks"));
+      const res = await getDocs(query(collection(db, "tasks"), orderBy('createdAt')));
       const tasks = res.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -26,14 +26,54 @@ export const addTask = createAsyncThunk(
       await addDoc(collection(db, "tasks"), {
         task: task.task,
         status: task.status,
+        createdAt: serverTimestamp()
       });
 
-      const res = await getDocs(collection(db, "tasks"));
+      const res = await getDocs(query(collection(db, "tasks"), orderBy('createdAt')));
       const tasks = res.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
+      return tasks;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const toggleCompleted = createAsyncThunk(
+  'tasks/toggleCompleted',
+  async (task, thunkAPI) => {
+    try {
+      await updateDoc(doc(db, "tasks", task.id), {
+          status: !task.status
+      });
+      const res = await getDocs(query(collection(db, "tasks"), orderBy('createdAt')));
+      const tasks = res.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return tasks;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteTask = createAsyncThunk(
+  'tasks/deleteTask',
+  async (task, thunkAPI) => {
+    try {
       
+      await deleteDoc(doc(db, "tasks", task.id));
+
+      const res = await getDocs(query(collection(db, "tasks"), orderBy('createdAt')));
+      const tasks = res.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
       return tasks;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
