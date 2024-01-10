@@ -29,7 +29,7 @@ const formDetailsSlice = createSlice({
       .addCase(addTask.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.items = [...state.items, action.payload];
+        state.items = action.payload;
       })
       .addCase(fetchTasks.rejected, handleRejected)
   },

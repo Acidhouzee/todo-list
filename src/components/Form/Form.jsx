@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addTask } from '../../redux/operation';
-import { nanoid } from 'nanoid';
-
-
 
 const Form = () => {
   const dispatch = useDispatch();
@@ -18,7 +15,6 @@ const Form = () => {
     evt.preventDefault();
 
     const newTask = {
-      id: nanoid(5),
       task: formValue,
       status: false
     }

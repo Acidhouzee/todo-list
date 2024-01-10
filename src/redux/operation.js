@@ -11,7 +11,7 @@ export const fetchTasks = createAsyncThunk(
         id: doc.id,
         ...doc.data(),
       }));
-      //console.log(tasks);
+  
       return tasks;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -23,12 +23,18 @@ export const addTask = createAsyncThunk(
   'tasks/addTask',
   async (task, thunkAPI) => {
     try {
-      const res = await addDoc(collection(db, "tasks"), {
-        id: task.id,
-        status: task.status,
+      await addDoc(collection(db, "tasks"), {
         task: task.task,
+        status: task.status,
       });
-      return res.data
+
+      const res = await getDocs(collection(db, "tasks"));
+      const tasks = res.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      
+      return tasks;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
