@@ -26,6 +26,7 @@ export const addTask = createAsyncThunk(
       await addDoc(collection(db, "tasks"), {
         task: task.task,
         status: task.status,
+        taskIndex: task.taskIndex,
         createdAt: serverTimestamp()
       });
 
@@ -65,7 +66,6 @@ export const deleteTask = createAsyncThunk(
   'tasks/deleteTask',
   async (task, thunkAPI) => {
     try {
-      
       await deleteDoc(doc(db, "tasks", task.id));
 
       const res = await getDocs(query(collection(db, "tasks"), orderBy('createdAt')));

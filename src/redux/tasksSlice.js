@@ -47,9 +47,6 @@ const formDetailsSlice = createSlice({
       .addCase(toggleCompleted.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        const index = state.items.findIndex(
-          task => task.id === action.payload.id
-        );
         state.items = action.payload;
       })
      

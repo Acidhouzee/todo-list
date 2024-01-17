@@ -2,7 +2,6 @@ import {tasksReducer} from "./tasksSlice";
 import {configureStore} from "@reduxjs/toolkit";
 import {
   persistStore,
-  PERSIST,
 } from 'redux-persist';
 
 

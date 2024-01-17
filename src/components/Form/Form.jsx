@@ -5,6 +5,7 @@ import { addTask } from '../../redux/operation';
 const Form = () => {
   const dispatch = useDispatch();
   const [formValue, setFormValue] = useState('');
+  const [taskIndex, setTaskIndex] = useState(0);
 
   const handleAddTask = (evt) => {
     evt.preventDefault();
@@ -16,8 +17,11 @@ const Form = () => {
 
     const newTask = {
       task: formValue,
-      status: false
+      status: false,
+      taskIndex: taskIndex
     }
+    setTaskIndex((prevIndex) => prevIndex + 1);
+
     setFormValue('');
     dispatch(addTask(newTask));
   };
