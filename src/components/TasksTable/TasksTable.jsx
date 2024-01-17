@@ -29,8 +29,8 @@ const TasksTable = () => {
     });
 
     // Add the new 'tasks' collection with the updated data
-    newItems.forEach(async (task) => {
-      const taskDocRef = doc(db, 'tasks', task.id.toString());
+    newItems.forEach(async (task, index) => {
+      const taskDocRef = doc(db, 'tasks', index.toString());
       await setDoc(taskDocRef, task);
     });
   };

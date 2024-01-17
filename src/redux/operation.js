@@ -66,6 +66,7 @@ export const deleteTask = createAsyncThunk(
   'tasks/deleteTask',
   async (task, thunkAPI) => {
     try {
+      
       await deleteDoc(doc(db, "tasks", task.id));
 
       const res = await getDocs(query(collection(db, "tasks"), orderBy('createdAt')));
