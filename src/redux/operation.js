@@ -6,7 +6,7 @@ export const fetchTasks = createAsyncThunk(
   'tasks/fetchAll',
   async (_, thunkAPI) => {
     try {
-      const res = await getDocs(query(collection(db, "tasks"), orderBy('createdAt')));
+      const res = await getDocs(query(collection(db, "tasks"), orderBy('taskIndex')));
       const tasks = res.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),

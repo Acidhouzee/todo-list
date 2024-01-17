@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTasks } from '../../redux/selectors';
 import { fetchTasks, toggleCompleted, deleteTask } from '../../redux/operation';
@@ -9,30 +9,45 @@ import { db } from '../../firebase/firebase';
 const TasksTable = () => {
   const dispatch = useDispatch();
   const tasks = useSelector(getTasks);
+  const [items, setItems] = useState(tasks);
+  console.log(tasks);
 
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
 
+  useEffect(() => {
+    setItems(tasks);
+  }, [tasks]);
+
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
-
-    const newItems = [...tasks];
+  
+    const newItems = [...items];
     const [removed] = newItems.splice(result.source.index, 1);
     newItems.splice(result.destination.index, 0, removed);
+  
+    const updatedNewItems = newItems.map((task, index) => ({
+      ...task,
+      taskIndex: index,
+    }));
 
-    // Delete the existing 'tasks' collection
+    console.log();
+
+    setItems(updatedNewItems);
+  
     const tasksCollectionRef = collection(db, 'tasks');
     const tasksSnapshot = await getDocs(tasksCollectionRef);
     tasksSnapshot.forEach(async (doc) => {
       await deleteDoc(doc.ref);
     });
-
-    // Add the new 'tasks' collection with the updated data
-    newItems.forEach(async (task, index) => {
-      const taskDocRef = doc(db, 'tasks', index.toString());
+  
+    updatedNewItems.forEach(async (task) => {
+      const taskDocRef = doc(db, 'tasks', task.id.toString());
       await setDoc(taskDocRef, task);
     });
+
+    dispatch(fetchTasks());
   };
 
   const handleToggle = (task) => dispatch(toggleCompleted(task));
@@ -59,8 +74,8 @@ const TasksTable = () => {
         <Droppable droppableId="list">
           {(provided) => (
             <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
-              {tasks.length > 0 &&
-                tasks.map((task, index) => (
+              {items.length > 0 &&
+                items.map((task, index) => (
                   <Draggable key={index} draggableId={`item-${index}`} index={index}>
                     {(provided) => (
                       <li
