@@ -13,3 +13,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.sort-checked-tasks .task-end {
+  display: none;
+}
+
+.sort-completed-tasks .task-start {
+  display: none;
+}

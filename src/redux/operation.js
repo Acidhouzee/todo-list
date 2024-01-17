@@ -11,7 +11,7 @@ export const fetchTasks = createAsyncThunk(
         id: doc.id,
         ...doc.data(),
       }));
-  
+
       return tasks;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -30,7 +30,7 @@ export const addTask = createAsyncThunk(
         createdAt: serverTimestamp()
       });
 
-      const res = await getDocs(query(collection(db, "tasks"), orderBy('createdAt')));
+      const res = await getDocs(query(collection(db, "tasks"), orderBy('taskIndex')));
       const tasks = res.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -49,7 +49,7 @@ export const toggleCompleted = createAsyncThunk(
       await updateDoc(doc(db, "tasks", task.id), {
           status: !task.status
       });
-      const res = await getDocs(query(collection(db, "tasks"), orderBy('createdAt')));
+      const res = await getDocs(query(collection(db, "tasks"), orderBy('taskIndex')));
       const tasks = res.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -66,10 +66,10 @@ export const deleteTask = createAsyncThunk(
   'tasks/deleteTask',
   async (task, thunkAPI) => {
     try {
-      
+
       await deleteDoc(doc(db, "tasks", task.id));
 
-      const res = await getDocs(query(collection(db, "tasks"), orderBy('createdAt')));
+      const res = await getDocs(query(collection(db, "tasks"), orderBy('taskIndex')));
       const tasks = res.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),

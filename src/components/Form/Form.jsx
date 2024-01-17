@@ -26,10 +26,6 @@ const Form = () => {
     dispatch(addTask(newTask));
   };
 
-  // const handleClearTasks = () => {
-  //   dispatch(clearTasks());
-  // };
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -43,7 +39,6 @@ const Form = () => {
 
         <button type='submit'>Add Task</button>
       </form>
-      {/* <button onClick={handleClearTasks} type='submit'>Clean Tasks</button> */}
     </div>
   )
 }

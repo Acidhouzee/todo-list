@@ -10,7 +10,8 @@ const TasksTable = () => {
   const dispatch = useDispatch();
   const tasks = useSelector(getTasks);
   const [items, setItems] = useState(tasks);
-  console.log(tasks);
+  const [sortActive, setSortActive] = useState(false)
+  const [sortCompleted, setSortCompleted] = useState(false)
 
   useEffect(() => {
     dispatch(fetchTasks());
@@ -22,26 +23,24 @@ const TasksTable = () => {
 
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
-  
+
     const newItems = [...items];
     const [removed] = newItems.splice(result.source.index, 1);
     newItems.splice(result.destination.index, 0, removed);
-  
+
     const updatedNewItems = newItems.map((task, index) => ({
       ...task,
       taskIndex: index,
     }));
 
-    console.log();
-
     setItems(updatedNewItems);
-  
+
     const tasksCollectionRef = collection(db, 'tasks');
     const tasksSnapshot = await getDocs(tasksCollectionRef);
     tasksSnapshot.forEach(async (doc) => {
       await deleteDoc(doc.ref);
     });
-  
+
     updatedNewItems.forEach(async (task) => {
       const taskDocRef = doc(db, 'tasks', task.id.toString());
       await setDoc(taskDocRef, task);
@@ -52,6 +51,24 @@ const TasksTable = () => {
 
   const handleToggle = (task) => dispatch(toggleCompleted(task));
   const handleTaskRemove = (task) => dispatch(deleteTask(task));
+
+  const handleSortActive = (e) => {
+    setSortCompleted(false)
+
+    if( e.target.checked ) {
+      setSortActive(true)
+    } else {
+      setSortActive(false)
+    }
+  }
+  const handleSortCompleted = (e) => {
+    setSortActive(false)
+    if( e.target.checked ) {
+      setSortCompleted(true)
+    } else {
+      setSortCompleted(false)
+    }
+  }
 
   const count = tasks.reduce(
     (acc, task) => {
@@ -67,13 +84,14 @@ const TasksTable = () => {
 
   return (
     <>
-      Tasks
-      Active: {count.active}
-      Completed: {count.completed}
+
+      <label htmlFor='active'>Active: {count.active} <input name='active' id="active" type="checkbox" checked={sortActive ? 'checked' : ''} onChange={handleSortActive} /></label>
+      <label htmlFor='completed'>Completed: {count.completed} <input name='completed' id="completed" type="checkbox" checked={sortCompleted ? 'checked' : ''} onChange={handleSortCompleted} /></label>
+
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="list">
           {(provided) => (
-            <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
+            <ul {...provided.droppableProps} ref={provided.innerRef} className={`space-y-2 ${ sortActive ? 'sort-checked-tasks' : ''} ${ sortCompleted ? 'sort-completed-tasks' : ''}`}>
               {items.length > 0 &&
                 items.map((task, index) => (
                   <Draggable key={index} draggableId={`item-${index}`} index={index}>
