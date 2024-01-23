@@ -49,7 +49,6 @@ const formDetailsSlice = createSlice({
         state.error = null;
         state.items = action.payload;
       })
-     
   },
 });
 

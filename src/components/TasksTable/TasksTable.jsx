@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTasks } from '../../redux/selectors';
+import { selectFilteredTasks } from '../../redux/selectors';
 import { fetchTasks, toggleCompleted, deleteTask } from '../../redux/operation';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 
-const TasksTable = () => {
+const TasksTable = ({test}) => {
   const dispatch = useDispatch();
-  const tasks = useSelector(getTasks);
+  const tasks = useSelector(selectFilteredTasks);
   const [items, setItems] = useState(tasks);
   const [sortActive, setSortActive] = useState(false)
   const [sortCompleted, setSortCompleted] = useState(false)
+
+  const isDragDisabled = true;
 
   useEffect(() => {
     dispatch(fetchTasks());
@@ -94,7 +96,7 @@ const TasksTable = () => {
             <ul {...provided.droppableProps} ref={provided.innerRef} className={`space-y-2 ${ sortActive ? 'sort-checked-tasks' : ''} ${ sortCompleted ? 'sort-completed-tasks' : ''}`}>
               {items.length > 0 &&
                 items.map((task, index) => (
-                  <Draggable key={index} draggableId={`item-${index}`} index={index}>
+                  <Draggable key={index} draggableId={`item-${index}`} index={index} isDragDisabled={test}>
                     {(provided) => (
                       <li
                         ref={provided.innerRef}
