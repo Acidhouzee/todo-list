@@ -5,6 +5,7 @@ import { fetchTasks, toggleCompleted, deleteTask } from '../../redux/operation';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
+import { ToastContainer } from 'react-toastify';
 
 const TasksTable = () => {
   const dispatch = useDispatch();
@@ -13,8 +14,6 @@ const TasksTable = () => {
   const [items, setItems] = useState(tasks);
   const [sortActive, setSortActive] = useState(false);
   const [sortCompleted, setSortCompleted] = useState(false);
-
-  console.log(isDraggable);
 
   useEffect(() => {
     dispatch(fetchTasks());
@@ -53,7 +52,9 @@ const TasksTable = () => {
   };
 
   const handleToggle = (task) => dispatch(toggleCompleted(task));
-  const handleTaskRemove = (task) => dispatch(deleteTask(task));
+  const handleTaskRemove = (task) => {
+    dispatch(deleteTask(task))
+  };
 
   const handleSortActive = (e) => {
     setSortCompleted(false)
@@ -90,7 +91,7 @@ const TasksTable = () => {
 
       <label htmlFor='active'>Active: {count.active} <input name='active' id="active" type="checkbox" checked={sortActive ? 'checked' : ''} onChange={handleSortActive} /></label>
       <label htmlFor='completed'>Completed: {count.completed} <input name='completed' id="completed" type="checkbox" checked={sortCompleted ? 'checked' : ''} onChange={handleSortCompleted} /></label>
-
+      
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="list">
           {(provided) => (
@@ -120,6 +121,7 @@ const TasksTable = () => {
           )}
         </Droppable>
       </DragDropContext>
+      <ToastContainer />
     </>
   );
 };
