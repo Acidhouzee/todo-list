@@ -1,7 +1,8 @@
 import { createSelector } from "@reduxjs/toolkit";
 
 export const getTasks = state => state.tasks.items;
-export const filteredTasks = state => state.filter;
+export const filteredTasks = state => state.filter.taskName;
+export const draggableTask = state => state.filter.draggable;
 
 export const selectFilteredTasks = createSelector(
     [getTasks, filteredTasks],

@@ -1,12 +1,11 @@
 import { useDispatch } from "react-redux";
 import { filterTasks } from "../../redux/filterSlice";
 
-const SearchForm = ({testF}) => {
+const SearchForm = () => {
   const dispatch = useDispatch();
 
   const filterName = event => {
     const value  = event.target.value.toLowerCase();
-    testF(value)
     dispatch(filterTasks(value));
   };
   

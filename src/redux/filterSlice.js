@@ -2,10 +2,14 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const formFilterSlice = createSlice({
   name: 'filter',
-  initialState: '',
+  initialState: {
+    taskName: '',
+    draggable: false,
+  },
   reducers: { 
         filterTasks: (state, action) => {
-            return action.payload
+            state.taskName = action.payload;
+            state.draggable = state.taskName.trim() !== '' ? true : false;
         }
     }
 });
